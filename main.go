@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"laundry/config"
+	"laundry/model"
+	"laundry/repository"
 )
 
 // Struct
@@ -26,25 +28,15 @@ func main() {
 
 	db := con.Conn()
 
-	customer := Customer{
-		Id:          "2",
-		Name:        "Rizqi",
-		PhoneNumber: "0857756",
-		Address:     "Jl. Raya Serang Km.24",
-	}
+	uomRepo := repository.NewUomRepository(db)
+	uomRepo.Save(model.Uom{
+		Id:          "1",
+		Description: "Kg",
+	})
 
-	// Exec entry query DML
-	_, err = db.Exec("INSERT INTO m_customer VALUES ($1, $2, $3, $4)",
-		customer.Id,
-		customer.Name,
-		customer.PhoneNumber,
-		customer.Address,
-	)
-
+	uom, err := uomRepo.FindById("1")
 	if err != nil {
 		fmt.Println(err)
 	}
-
-	fmt.Println("Success inserting data")
-
+	fmt.Println(uom)
 }
