@@ -1,9 +1,7 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
-	_ "github.com/lib/pq"
 	"laundry/config"
 )
 
@@ -16,28 +14,21 @@ type Customer struct {
 }
 
 func main() {
+
 	cfg, err := config.NewConfig()
 	if err != nil {
 		fmt.Println(err)
 	}
-
-	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		cfg.DbConfig.Host,
-		cfg.DbConfig.Port,
-		cfg.DbConfig.User,
-		cfg.DbConfig.Password,
-		cfg.DbConfig.Name,
-	)
-	db, err := sql.Open(cfg.DbConfig.Driver, dsn)
+	con, err := config.NewDbConnection(cfg)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	fmt.Println(db)
+	db := con.Conn()
 
 	customer := Customer{
-		Id:          "1",
-		Name:        "Reza",
+		Id:          "2",
+		Name:        "Rizqi",
 		PhoneNumber: "0857756",
 		Address:     "Jl. Raya Serang Km.24",
 	}
