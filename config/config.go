@@ -14,7 +14,6 @@ type DbConfig struct {
 	Driver   string
 }
 
-// function recipe
 type Config struct {
 	DbConfig
 }
@@ -37,7 +36,6 @@ func (c *Config) ReadConfig() error {
 	return nil
 }
 
-// Constructor
 func NewConfig() (*Config, error) {
 	cfg := &Config{}
 	err := cfg.ReadConfig()
