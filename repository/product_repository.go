@@ -18,7 +18,7 @@ type productRepository struct {
 	db *sql.DB
 }
 
-func (p productRepository) Save(product model.Product) error {
+func (p *productRepository) Save(product model.Product) error {
 	_, err := p.db.Exec("INSERT INTO m_products VALUES ($1, $2, $3, $4)",
 		product.Id,
 		product.Name,
@@ -31,7 +31,7 @@ func (p productRepository) Save(product model.Product) error {
 	return nil
 }
 
-func (p productRepository) FindById(id string) (model.Product, error) {
+func (p *productRepository) FindById(id string) (model.Product, error) {
 	row := p.db.QueryRow(`
 	SELECT p.id, p.name, p.price, u.id, u.description 
 	FROM m_products p 
@@ -53,7 +53,7 @@ func (p productRepository) FindById(id string) (model.Product, error) {
 
 }
 
-func (p productRepository) FindByName(name string) ([]model.Product, error) {
+func (p *productRepository) FindByName(name string) ([]model.Product, error) {
 	rows, err := p.db.Query(`
 	SELECT p.id, p.name, p.price, u.id, u.description 
 	FROM m_products p 
@@ -82,7 +82,7 @@ func (p productRepository) FindByName(name string) ([]model.Product, error) {
 	return products, nil
 }
 
-func (p productRepository) FindAll() ([]model.Product, error) {
+func (p *productRepository) FindAll() ([]model.Product, error) {
 	rows, err := p.db.Query(`SELECT p.id, p.name, p.price, u.id, u.description FROM m_products p 
 	JOIN m_uom u ON u.id = p.uom_id`)
 
@@ -108,7 +108,7 @@ func (p productRepository) FindAll() ([]model.Product, error) {
 	return products, nil
 }
 
-func (p productRepository) Update(product model.Product) error {
+func (p *productRepository) Update(product model.Product) error {
 	_, err := p.db.Exec("UPDATE m_products SET name = $2, price = $3, uom_id = $4 WHERE id = $1",
 		product.Id,
 		product.Name,
@@ -118,7 +118,7 @@ func (p productRepository) Update(product model.Product) error {
 	return err
 }
 
-func (p productRepository) DeleteById(id string) error {
+func (p *productRepository) DeleteById(id string) error {
 	_, err := p.db.Exec("DELETE FROM m_products WHERE id = $1", id)
 	if err != nil {
 		return err
