@@ -20,7 +20,7 @@ type uomRepository struct {
 	db *sql.DB // field DB
 }
 
-func (u uomRepository) Save(uom model.Uom) error {
+func (u *uomRepository) Save(uom model.Uom) error {
 	_, err := u.db.Exec("INSERT INTO m_uom VALUES  ($1, $2)", uom.Id, uom.Description)
 	if err != nil {
 		return err
@@ -28,7 +28,7 @@ func (u uomRepository) Save(uom model.Uom) error {
 	return nil
 }
 
-func (u uomRepository) FindById(id string) (model.Uom, error) {
+func (u *uomRepository) FindById(id string) (model.Uom, error) {
 	row := u.db.QueryRow("SELECT id, description FROM m_uom WHERE id = $1", id)
 	var uom model.Uom
 	err := row.Scan(&uom.Id, &uom.Description)
@@ -40,7 +40,7 @@ func (u uomRepository) FindById(id string) (model.Uom, error) {
 	return uom, nil
 }
 
-func (u uomRepository) FindAll() ([]model.Uom, error) {
+func (u *uomRepository) FindAll() ([]model.Uom, error) {
 	rows, err := u.db.Query("SELECT * FROM m_uom")
 	if err != nil {
 		// karena slice bisa nil kalau tidak ada beda dengan model saat find by id
@@ -64,7 +64,7 @@ func (u uomRepository) FindAll() ([]model.Uom, error) {
 	return uoms, nil
 }
 
-func (u uomRepository) Update(uom model.Uom) error {
+func (u *uomRepository) Update(uom model.Uom) error {
 	_, err := u.db.Exec("UPDATE m_uom SET description= $1 where id= $2", uom.Description, uom.Id)
 	//_, err := u.db.Exec("UPDATE m_uom SET description= $2 where id= $1", uom.Id, uom.Description)
 	if err != nil {
@@ -73,7 +73,7 @@ func (u uomRepository) Update(uom model.Uom) error {
 	return nil
 }
 
-//func (u uomRepository) Update(uom model.Uom) error {
+//func (u *uomRepository) Update(uom model.Uom) error {
 //	query := "UPDATE m_uom set description = $1 where id=$2"
 //
 //	_, err := u.db.Exec(query, uom.Description, uom.Id)
@@ -83,7 +83,7 @@ func (u uomRepository) Update(uom model.Uom) error {
 //	return nil
 //}
 
-func (u uomRepository) DeleteById(id string) error {
+func (u *uomRepository) DeleteById(id string) error {
 	_, err := u.db.Exec("DELETE FROM m_uom WHERE id=$1", id)
 	if err != nil {
 		return err
