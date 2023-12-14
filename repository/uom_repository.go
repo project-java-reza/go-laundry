@@ -33,6 +33,8 @@ func (u uomRepository) FindById(id string) (model.Uom, error) {
 	var uom model.Uom
 	err := row.Scan(&uom.Id, &uom.Description)
 	if err != nil {
+		// tidak bisa di nil, model struct tidak termasuk type dari nil
+		// jadi kita harus instance walaupun isinya kosong {}
 		return model.Uom{}, err
 	}
 	return uom, nil
@@ -41,6 +43,7 @@ func (u uomRepository) FindById(id string) (model.Uom, error) {
 func (u uomRepository) FindAll() ([]model.Uom, error) {
 	rows, err := u.db.Query("SELECT * FROM m_uom")
 	if err != nil {
+		// karena slice bisa nil kalau tidak ada beda dengan model saat find by id
 		return nil, err
 	}
 	var uoms []model.Uom
@@ -63,6 +66,7 @@ func (u uomRepository) FindAll() ([]model.Uom, error) {
 
 func (u uomRepository) Update(uom model.Uom) error {
 	_, err := u.db.Exec("UPDATE m_uom SET description= $1 where id= $2", uom.Description, uom.Id)
+	//_, err := u.db.Exec("UPDATE m_uom SET description= $2 where id= $1", uom.Id, uom.Description)
 	if err != nil {
 		return err
 	}
