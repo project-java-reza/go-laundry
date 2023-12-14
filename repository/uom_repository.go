@@ -15,6 +15,7 @@ type UomRepository interface {
 }
 
 // tidak dipakai di file lain
+// class
 type uomRepository struct {
 	db *sql.DB // field DB
 }
