@@ -58,7 +58,7 @@ func (u *uomUseCase) FindAll() ([]model.Uom, error) {
 func (u *uomUseCase) Update(payload model.Uom) error {
 	_, err := u.FindById(payload.Id)
 	if err != nil {
-		return err // hanya return err karena sama dengan validasi err yang ada di find by id
+		return fmt.Errorf("id not found")
 	}
 
 	err = u.repo.Update(payload)
