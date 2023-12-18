@@ -55,31 +55,33 @@ func (p *productUserCase) FindById(id string) (model.Product, error) {
 }
 
 func (p *productUserCase) GetByName(name string) ([]model.Product, error) {
-	byName, err := p.repo.FindByName(name)
-	if err != nil {
-		return nil, fmt.Errorf("error while fetching products by name: %v", err)
-	}
-
-	if len(byName) == 0 {
-		return nil, fmt.Errorf("no products found with the name: %s", name)
-	}
-
-	return byName, nil
+	//byName, err := p.repo.FindByName(name)
+	//if err != nil {
+	//	return nil, fmt.Errorf("error while fetching products by name: %v", err)
+	//}
+	//
+	//if len(byName) == 0 {
+	//	return nil, fmt.Errorf("no products found with the name: %s", name)
+	//}
+	//
+	//return byName, nil
+	return p.repo.FindByName(name)
 }
 
 func (p *productUserCase) FindAll() ([]model.Product, error) {
-	products, err := p.repo.FindAll()
-	if err != nil {
-		return nil, fmt.Errorf("data product is empty: %v", err)
-	}
-
-	return products, nil
+	//products, err := p.repo.FindAll()
+	//if err != nil {
+	//	return nil, fmt.Errorf("data product is empty: %v", err)
+	//}
+	//
+	//return products, nil
+	return p.repo.FindAll()
 }
 
 func (p *productUserCase) Update(payload model.Product) error {
 	_, err := p.repo.FindById(payload.Id)
 	if err != nil {
-		return err
+		return fmt.Errorf("id not found: %v", err)
 	}
 
 	err = p.repo.Update(payload)
@@ -90,8 +92,16 @@ func (p *productUserCase) Update(payload model.Product) error {
 }
 
 func (p *productUserCase) Delete(id string) error {
-	//TODO implement me
-	panic("implement me")
+	product, err := p.FindById(id)
+	if err != nil {
+		return err
+	}
+
+	err = p.repo.DeleteById(product.Id)
+	if err != nil {
+		return fmt.Errorf("Failed to delete product: %v", err)
+	}
+	return nil
 }
 
 // Constructor
